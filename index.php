@@ -1,16 +1,12 @@
 <?php
 session_start();
-//session_destroy();
 include 'htmlEL/head.php';
 head();
 require_once 'ConnectDB.php';//adding Connect Class with all DB functions
 
-//$localhostDB = new ConnectDB('localhost', 'root', 'root', 'stories');
-$netDB = new ConnectDB('a357067.mysql.mchost.ru', 'a357067_skoda', 'Subaruimpreza777', 'a357067_stories');
-$netDB->connect();
-//$localhostDB->connect();
-$netDB->exec_query("SET NAMES 'utf8mb4'");
-//$localhostDB->exec_query("SET NAMES 'utf8mb4'");
+$localhostDB = new ConnectDB('localhost', 'root', 'root', 'stories');
+$localhostDB->connect();
+$localhostDB->exec_query("SET NAMES 'utf8mb4'");
 ?>
 
 <body>
@@ -32,7 +28,6 @@ $netDB->exec_query("SET NAMES 'utf8mb4'");
     $notesOnPage = 15;
         $from = ($page - 1) * $notesOnPage;
         $query = "SELECT * FROM storyauthors WHERE id > 0 LIMIT $from,$notesOnPage"; //making query to get data
-        //$result = $netDB->exec_query($query);
         $result = $localhostDB->exec_query($query);
         for ($data = []; $row = mysqli_fetch_assoc($result); $data[] = $row) ;
         $disablet = ''; //Prepairing disabling function for page switchers
@@ -53,8 +48,7 @@ $netDB->exec_query("SET NAMES 'utf8mb4'");
             <?php
             //Building page list dynamically
             $query = "SELECT COUNT(*) as count FROM storyauthors";
-            $resultForCount = $netDB->exec_query($query);
-            //$resultForCount = $localhostDB->exec_query($query);
+            $resultForCount = $localhostDB->exec_query($query);
             $count = mysqli_fetch_assoc($resultForCount)['count'];
             $pagesCount = ceil($count / $notesOnPage);
             for ($i = 1; $i <= $pagesCount; $i++) {
@@ -96,16 +90,13 @@ $netDB->exec_query("SET NAMES 'utf8mb4'");
             <?php
             if (isset($_POST['name'])) {
                 if (!empty($_POST['name']) and !empty($_POST['message'])) {
-                    $name = $netDB->queryDef($_POST['name']);
-                    //$name = $localhostDB->queryDef($_POST['name']);
-                    $message = $netDB->queryDef($_POST['message']);
-                    //$message = $localhostDB->queryDef($_POST['message']);
+                    $name = $localhostDB->queryDef($_POST['name']);
+                    $message = $localhostDB->queryDef($_POST['message']);
                     $name = strip_tags($name);
                     $message = strip_tags($message);
                     $_SESSION['name'] = $name;
                     $query = "INSERT INTO storyauthors SET name='$name', datetime= NOW(), message='$message'";
-                    $netDB->exec_query($query);
-                    //$localhostDB->exec_query($query);
+                    $localhostDB->exec_query($query);
                     echo "<meta http-equiv='refresh' content='0'>";
                 } else if (!empty($_POST['name']) and empty($_POST['message'])) {
                     require_once 'htmlEL/alerts/storyERROR.php';
