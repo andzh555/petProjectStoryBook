@@ -1,6 +1,4 @@
 <?php
-
-
 class ConnectDB
 {
     private $dbHost;
@@ -8,11 +6,6 @@ class ConnectDB
     private $dbPass;
     private $dbBaseName;
     private static $link;
-
-    public static function getLink()
-    {
-        return self::$link;
-    }
 
     public function __construct($dbHost, $dbUserName, $dbPass, $dbBaseName)
     {
